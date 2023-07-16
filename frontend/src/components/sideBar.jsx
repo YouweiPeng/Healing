@@ -8,10 +8,17 @@ import React, { useState } from 'react';
 import {BsArrowBarRight} from 'react-icons/bs';
 import{BsArrowBarLeft} from 'react-icons/bs';
 import { useGlobalContext } from '../context';
+import { useNavigate } from 'react-router-dom';
+
 function SideBar() {
     const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
     const handleClick = () => {
       setIsSidebarExpanded(!isSidebarExpanded);
+
+    };
+    const navigate = useNavigate();
+    const handleCommunity = () => {
+      navigate('/CommunityPage');
     };
   
     return (
@@ -20,7 +27,7 @@ function SideBar() {
           <button className='sideBar-btn' onClick={handleClick}>
           {isSidebarExpanded ? <BsArrowBarLeft /> : <BsArrowBarRight />}
           </button>
-          <button className='sideBar-btn'>
+          <button className='sideBar-btn community-button' onClick={handleCommunity}>
             <FaUserFriends />
             {isSidebarExpanded && <span>Community</span>}
           </button>
