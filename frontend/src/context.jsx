@@ -3,15 +3,15 @@ import App from "./App";
 import axios from "axios";
 const AppContext = React.createContext();
 
-const AppProvider =({children})=>{
-
-
-   
-return <AppContext.Provider value={{name:'hello world'}}>
-    {children}
-</AppContext.Provider>
-
-}
+const AppProvider = ({ children }) => {
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  
+    return (
+      <AppContext.Provider value={{ isSidebarExpanded, setIsSidebarExpanded }}>
+        {children}
+      </AppContext.Provider>
+    );
+  };
 
 
 export const useGlobalContext=()=>{
