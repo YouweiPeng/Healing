@@ -1,7 +1,7 @@
 import React from "react";
 import SideBar from "../components/sideBar";
 import { useGlobalContext } from "../context";
-import background from"../images/background.jpg"
+// import background from"../images/background.jpg"
 import {GiNightSleep} from 'react-icons/gi';
 import {BsEmojiSunglassesFill} from 'react-icons/bs';
 import {AiOutlineAim} from 'react-icons/ai';
@@ -10,6 +10,7 @@ import {BsSun} from 'react-icons/bs';
 import { useState } from "react";
 import{BsAlipay} from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import {motion} from 'framer-motion';
 function MainPage() {
     const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
     const navigate = useNavigate();
@@ -45,12 +46,23 @@ function MainPage() {
         navigate('/SupportPage');
     };
     return (
+        <motion.div
+      initial="page-entering"
+      animate="page-entered"
+      exit="page-entering"
+      variants={{
+        'page-entering': { opacity: 0 },
+        'page-entered': { opacity: 1 },
+      }}
+      transition={{ duration: 1 }}
+    >
+
       <div>
         <div className="mainPage" style={{ marginLeft: isSidebarExpanded ? '200px' : '90px' }}>
 
             <div className="background-container">
                 
-                <img class="background-img" src={background} onDragStart={handleDragStart}/>
+                <img class="background-img" src="/images/background.jpg" onDragStart={handleDragStart}/>
                 <div className="image-overlay">
                     <p className="Logo-word">LOGO</p>
                     <div className="Option-container">
@@ -78,6 +90,7 @@ function MainPage() {
         </div>
         
       </div>
+      </motion.div>
     );
   }
   

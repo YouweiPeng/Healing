@@ -1,8 +1,8 @@
 import {motion} from 'framer-motion';
-import HomeButton from '../components/HomeButton';
 import SideBar from '../components/sideBar';
 import { useGlobalContext } from '../context';
-const GuidePage = () => {
+import PageHomeButton from '../components/PageHomeButton';
+const ArticlePage = () => {
   const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
     return (
       <motion.div
@@ -15,13 +15,15 @@ const GuidePage = () => {
       }}
       transition={{ duration: 1 }}
     >
-      <div className="container" style={{ marginLeft: isSidebarExpanded ? '200px' : '90px' }}>
-        <h1>Still working on the guide steps for specific needs for user</h1>
-        <HomeButton/>
+
+      <div className="container" style={{ marginLeft: isSidebarExpanded ? '200px' : '90px' ,position:'relative'}} >
+        <PageHomeButton/>
+        <h1>Article Page</h1>
         <SideBar/>
       </div>
+
       </motion.div>
     );
   };
   
-  export default GuidePage;
+  export default ArticlePage;

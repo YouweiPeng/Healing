@@ -20,6 +20,19 @@ function SideBar() {
     const handleCommunity = () => {
       navigate('/CommunityPage');
     };
+    const handleStore = () => {
+      navigate('/StorePage');
+    };
+    const handleArticles = () => {
+      navigate('/ArticlePage');
+    };
+    const handleMentalTest = () => {
+      navigate('/MentalTestPage');
+    };
+    const handleContactUs = () => {
+      navigate('/ContactUsPage');
+    };
+
   
     return (
       <div>
@@ -31,19 +44,19 @@ function SideBar() {
             <FaUserFriends />
             {isSidebarExpanded && <span>Community</span>}
           </button>
-          <button className='sideBar-btn'>
+          <button className='sideBar-btn' onClick={handleStore}>
             <PiShoppingCart />
             {isSidebarExpanded && <span>Store</span>}
           </button>
-          <button className='sideBar-btn'>
+          <button className='sideBar-btn' onClick={handleArticles}>
             <GrArticle />
             {isSidebarExpanded && <span>Articles</span>}
           </button>
-          <button className='sideBar-btn'>
+          <button className='sideBar-btn' onClick={handleMentalTest}>
             <FaStethoscope />
             {isSidebarExpanded && <span>Mental test</span>}
           </button>
-          <button className='sideBar-btn'>
+          <button className='sideBar-btn' onClick={handleContactUs}>
             <BsTelephoneOutboundFill />
             {isSidebarExpanded && <span>Contact us</span>}
           </button>
