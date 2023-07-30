@@ -15,7 +15,6 @@ const CommunityPage = () => {
       }
       return item;
     });
-    console.log(newFriends);
     setRecFriends(newFriends);
   }
   const handleDeleteFriend = (event) => {
@@ -25,7 +24,6 @@ const CommunityPage = () => {
       }
       return item;
     });
-    console.log(newFriends);
     setRecFriends(newFriends);
   }
 

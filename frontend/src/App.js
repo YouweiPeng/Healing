@@ -14,6 +14,9 @@ import MentalTestPage from "./pages/MentalTestPage";
 import ArticlePage from "./pages/ArticlePage";
 import { motion, AnimatePresence } from 'framer-motion';
 import CheckOutPage from "./pages/CheckOutPage";
+import GoalsPage from "./pages/GoalsPage";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
 function App() {
   return (
     <div className="App">
@@ -29,7 +32,9 @@ function App() {
           transition={{ duration: 1 }}
         >
           <Routes>
-            <Route path="/" element={<MainPage />}></Route>
+            <Route path="/" element={<SignIn />}></Route>
+            <Route path="/SignUp" element={<SignUp />}></Route>
+            <Route path="/MainPage" element={<MainPage />}></Route>
             <Route path="/GuidePage" element={<GuidePage />}></Route>
             <Route path="/SupportPage" element={<SupportPage />}></Route>
             <Route path="/CommunityPage" element={<CommunityPage />}></Route>
@@ -38,6 +43,7 @@ function App() {
             <Route path="/MentalTestPage" element={<MentalTestPage />}></Route>
             <Route path="/ArticlePage" element={<ArticlePage />}></Route>
             <Route path="/CheckOutPage" element={<CheckOutPage />}></Route>
+            <Route path="/GoalsPage" element={<GoalsPage />}></Route>
           </Routes>
           </motion.div>
       </Router>

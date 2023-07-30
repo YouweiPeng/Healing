@@ -28,7 +28,6 @@ const SupportPage = () => {
         
         <img src="/images/Ali.jpg" style={{height:'688px'}}/>
         
-        <sideBar/>
       </div>
       </motion.div>
     );

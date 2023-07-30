@@ -9,6 +9,7 @@ import {BsArrowBarRight} from 'react-icons/bs';
 import{BsArrowBarLeft} from 'react-icons/bs';
 import { useGlobalContext } from '../context';
 import { useNavigate } from 'react-router-dom';
+import {PiTarget} from 'react-icons/pi';
 
 function SideBar() {
     const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
@@ -32,7 +33,9 @@ function SideBar() {
     const handleContactUs = () => {
       navigate('/ContactUsPage');
     };
-
+    const handleGoals = () => {
+      navigate('/GoalsPage');
+    };
   
     return (
       <div>
@@ -48,13 +51,17 @@ function SideBar() {
             <PiShoppingCart />
             {isSidebarExpanded && <span>Store</span>}
           </button>
+          <button className='sideBar-btn' onClick={handleGoals}>
+            <PiTarget />
+            {isSidebarExpanded && <span>Your goals</span>}
+          </button>
           <button className='sideBar-btn' onClick={handleArticles}>
             <GrArticle />
             {isSidebarExpanded && <span>Articles</span>}
           </button>
           <button className='sideBar-btn' onClick={handleMentalTest}>
             <FaStethoscope />
-            {isSidebarExpanded && <span>Mental test</span>}
+            {isSidebarExpanded && <span>Doctor</span>}
           </button>
           <button className='sideBar-btn' onClick={handleContactUs}>
             <BsTelephoneOutboundFill />

@@ -1,6 +1,7 @@
 import {motion} from 'framer-motion';
 import SideBar from '../components/sideBar';
 import { useGlobalContext } from '../context';
+import axios from "axios";
 import PageHomeButton from '../components/PageHomeButton';
 import {BsCartPlus} from 'react-icons/bs';
 import{CiShoppingCart} from 'react-icons/ci';
@@ -9,8 +10,23 @@ import { useNavigate } from 'react-router-dom';
 const StorePage = () => {
   const navigate = useNavigate();
   const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
-  const{storeItems} = useGlobalContext();
+  const{storeItems,setStoreItems} = useGlobalContext();
   const {cart, setCart}= useGlobalContext();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/products/');
+        const productsData = response.data;
+        console.log(productsData);
+        setStoreItems(productsData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const cartQuantity = () => {
     let quantity = 0;
     cart.forEach((item) => {
@@ -43,13 +59,9 @@ const StorePage = () => {
       }
       }
     })
-    console.log(newCart);
     setCart(newCart);
 
   }
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
     return (
       <motion.div
       initial="page-entering"
@@ -84,10 +96,11 @@ const StorePage = () => {
         <section className="section-center">
         {
           storeItems.map((item)=>{
-            const{id,name,img,price} = item;
+            const{id,name,image,price} = item;
             return(               
               <article key={id} className="singleItem" >
-                <img src={img} className="testImg"/>
+                <img src={`/images/${image}`} className="testImg" alt={name} />
+                
                 <footer>
                   <h4>{name}</h4>
                   <h5 className="price">${price/100}</h5>

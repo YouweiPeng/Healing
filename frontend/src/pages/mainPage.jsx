@@ -14,11 +14,7 @@ import {motion} from 'framer-motion';
 function MainPage() {
     const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
     const navigate = useNavigate();
-    const [button1Clicked, setButton1Clicked] = useState(false);
-    const [button2Clicked, setButton2Clicked] = useState(false);
-    const [button3Clicked, setButton3Clicked] = useState(false);
-    const [button4Clicked, setButton4Clicked] = useState(false);
-    const [button5Clicked, setButton5Clicked] = useState(false);
+    const{button1Clicked, setButton1Clicked,button2Clicked, setButton2Clicked,button3Clicked, setButton3Clicked,button4Clicked, setButton4Clicked,button5Clicked, setButton5Clicked} = useGlobalContext();
     const handleButtonClick1 = () => {
         setButton1Clicked(!button1Clicked);
       };

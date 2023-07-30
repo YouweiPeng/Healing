@@ -55,15 +55,16 @@ const CheckOutPage = () => {
                 )
             })
         }
+        </div>
         
-                <div className='calculate-price'>
+        <div className='calculate-price'>
                     <h3>Order summary:</h3>
                     <h4>items({cartQuantity()}) </h4>
             <h4>Total before tax: ${cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)/100}</h4>
             <h4>Estimated tax (13%): ${(cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)*13/10000).toFixed(2)}</h4>
             <h4 style={{color: 'rgb(177, 39, 4)'}}>Order total: ${(cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)*113/10000).toFixed(2)}</h4>
         </div>
-        </div>
+        
 
         </div>
         <SideBar/>
