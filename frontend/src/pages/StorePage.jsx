@@ -7,61 +7,161 @@ import {BsCartPlus} from 'react-icons/bs';
 import{CiShoppingCart} from 'react-icons/ci';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 const StorePage = () => {
   const navigate = useNavigate();
   const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
+  const {user} = useGlobalContext();
   const{storeItems,setStoreItems} = useGlobalContext();
-  const {cart, setCart}= useGlobalContext();
+  const {cart, setCart,fetchCart}= useGlobalContext();
+  const {cartDataFetched }= useGlobalContext();
+  const {cartContent, setCartContent} = useGlobalContext();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/products/');
         const productsData = response.data;
-        console.log(productsData);
         setStoreItems(productsData);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, []);
 
-  const cartQuantity = () => {
-    let quantity = 0;
-    cart.forEach((item) => {
-      quantity += item.quantity;
-    });
-    return quantity;
-  }
+  useEffect(() => {
+        fetchCart()
+      }
+      ,[]);
+
   const handleCartButton = () => {
     navigate('/checkOutPage');
   }
-  const handleAddtoCart = (event) => {
-    const newCart=[...cart]
-    storeItems.map((item)=>{
-      if(item.id === parseInt(event.currentTarget.id)){
-        const {id,name,price}=item;
-        let match=false
-        newCart.forEach(element => {
-          if(element.id === id){
-            element.quantity += 1;
-            match=true;
-          }
-        });
-        if(!match){
-          newCart.push({
-            id: id,
-            name: name,
-            price: price,
-            quantity: 1
-          });
-      }
-      }
-    })
-    setCart(newCart);
 
+
+  const handleAddtoCart = async (event) => {
+    const productId = parseInt(event.currentTarget.id);
+    const cartId = cart.cartId;
+
+    const data1 = {
+      cartId: cartId,
+      product: productId,
+    }
+    const response = await axios.get('http://127.0.0.1:8000/api/get_cart_items/', {params:data1,});
+    console.log(response.data)
+
+
+
+
+
+    if (response.data.length >0) {
+      const data2 = {
+        cartId: cartId,
+        product: productId,
+        quantity: response.data[0].quantity + 1
+      };
+      try {
+        const response = await axios.patch('http://127.0.0.1:8000/api/update_cart_items/',data2);
+        console.log(response)
+        const newCartContent = [...cartContent]
+        newCartContent.map((item) => {
+          console.log(item.product)
+          if (item.product === data2.product) {
+            console.log("item matched")
+            item.quantity = item.quantity + 1;
+          }
+        })
+        setCart({ ...cart, inCart: [...cart.inCart, response.data] });
+        setCartContent(newCartContent)
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+      }
+    } 
+
+
+
+
+
+
+    else {
+      console.log("else triggered")
+      const data = {
+        cartId: cart.cartId,
+        product: productId,
+        quantity: 1
+      };
+
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/add_to_cart/', data);
+        console.log(response.data)
+        setCart({ ...cart, inCart: [...cart.inCart, response.data] });
+        setCartContent([...cartContent, response.data])
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+      }
+    }
+  };
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    const data ={
+      cartId: cart.cartId,
+    }
+    const fetchCartItems = async (data) => {
+    try{
+    const responses = await axios.get('http://127.0.0.1:8000/api/get_cart_items_by_cart/', {params:data,});
+    console.log(responses.data)
+    setCartContent(responses.data);
   }
+    catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  }
+  fetchCartItems(data);
+  }, []);
+  
+  const cartQuantity = () => {
+    // let quantity = 0;
+    // console.log(cart)
+    // console.log(cart.inCart)
+    // if (cartDataFetched) {
+    //   cart.inCart.map((item) => {
+    //     const data = {
+    //       cart: cart.cartId,
+    //       product: item,
+    //     };
+    //     const fetchCartItems = async (data) => {
+    //       const response = await axios.get('http://127.0.0.1:8000/api/get_cart_items/', {params:data,});
+    //       console.log(response.data[0].quantity)
+    //       // response.then(response => {
+    //       //   const cartItems = response.data;
+    //       //   console.log(cartItems[0].quantity)
+    //       //   return cartItems[0].quantity;
+    //       // });
+    //       return response.data[0].quantity;
+    //     }
+    //     let add=fetchCartItems(data);
+    //     quantity += add;
+    //   });
+    // }
+    // console.log(quantity)
+    // return quantity;
+    // return (cart.inCart.length);
+    let quantity = 0;
+    cartContent.map((item) => {
+      quantity += item.quantity;
+    }
+    );
+    return quantity;
+  };
+
+  console.log(cartContent)
     return (
       <motion.div
       initial="page-entering"
@@ -84,7 +184,10 @@ const StorePage = () => {
         <div>
         <button className='cart-button' onClick={handleCartButton}>
               <CiShoppingCart/>
-                <div className="cart-quantity js-cart-quantity">{cartQuantity()}</div>
+              <div className="cart-quantity js-cart-quantity">
+                {cartQuantity()}
+
+            </div>
 
             </button> 
             <PageHomeButton/>

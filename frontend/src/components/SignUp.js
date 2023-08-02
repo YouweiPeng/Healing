@@ -50,6 +50,16 @@ export default function SignUp() {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/create_customer/', data);
       console.log(response.data);
+      const dataCart = {
+        CustomerId: response.data.CustomerId
+      }
+        try{
+          const responseCart = await axios.post('http://127.0.0.1:8000/api/create_cart/', dataCart);
+          console.log(responseCart.data);
+        }
+        catch (error) {
+          console.error('Error creating cart, something wrong:', error);
+        }
       navigate('/');
       
       

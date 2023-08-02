@@ -6,7 +6,7 @@ import PageHomeButton from '../components/PageHomeButton';
 const CheckOutPage = () => {
     const cartQuantity = () => {
         let quantity = 0;
-        cart.forEach((item) => {
+        cart.inCart.forEach((item) => {
           quantity += item.quantity;
         });
         return quantity;
@@ -15,7 +15,7 @@ const CheckOutPage = () => {
   const {cart, setCart}= useGlobalContext();
   const handleDeleteButton = (event) => {
     const newCart=[...cart]
-    newCart.map((item)=>{
+    newCart.inCart.map((item)=>{
         if(item.id === parseInt(event.currentTarget.id)){
             const index = newCart.indexOf(item);
             newCart.splice(index,1);
@@ -41,7 +41,7 @@ const CheckOutPage = () => {
         <div className='checkOut-div'>
         <div className='item-display'>
         {
-            cart.map((item)=>{
+            cart.inCart.map((item)=>{
                 return(
                     <div className='item-div'>
                         <div className='item-info'>
@@ -60,8 +60,8 @@ const CheckOutPage = () => {
         <div className='calculate-price'>
                     <h3>Order summary:</h3>
                     <h4>items({cartQuantity()}) </h4>
-            <h4>Total before tax: ${cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)/100}</h4>
-            <h4>Estimated tax (13%): ${(cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)*13/10000).toFixed(2)}</h4>
+            <h4>Total before tax: ${cart.inCart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)/100}</h4>
+            <h4>Estimated tax (13%): ${(cart.inCart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)*13/10000).toFixed(2)}</h4>
             <h4 style={{color: 'rgb(177, 39, 4)'}}>Order total: ${(cart.reduce((acc, item)=>{return acc+item.price*item.quantity},0)*113/10000).toFixed(2)}</h4>
         </div>
         

@@ -4,33 +4,60 @@ import {motion} from 'framer-motion';
 import SideBar from '../components/sideBar';
 import PageHomeButton from '../components/PageHomeButton';
 import { useGlobalContext } from '../context';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 const GoalsPage = () => {
-
-  
+    const {user}= useGlobalContext();
     const navigate = useNavigate();
     const{Goals, setGoals} = useGlobalContext();
     const { isSidebarExpanded } = useGlobalContext();
+    const fetchGoals = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/get_goal/', { params: { CustomerId: user.CustomerId } });
+            setGoals(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        fetchGoals();
+    }, []);
     const handleFinish=(event)=>{
         const newGoals = [...Goals];
         newGoals.map((goal)=>{
-            if(goal.id === parseInt(event.currentTarget.id)){
+            console.log(event.currentTarget.id)
+            if(goal.GoalId === parseInt(event.currentTarget.id)){
                 goal.Finished = true;
+                const data = {GoalId: event.currentTarget.id};
+                try{
+                    const response = axios.patch('http://127.0.0.1:8000/api/update_goal/', data);
+                    console.log(response);
+                    }catch(error){
+                        console.log(error);
+                    }
             }
         })
         setGoals(newGoals);
+        console.log(newGoals);
+    
+
     }
     const handleDelete=(event)=>{
         const newGoals = [...Goals];
         newGoals.map((goal)=>{
-            if(goal.id === parseInt(event.currentTarget.id)){
+            if(goal.GoalId === parseInt(event.currentTarget.id)){
                 newGoals.splice(newGoals.indexOf(goal),1);
+                try{
+                    const response = axios.delete(`http://127.0.0.1:8000/api/delete_goal/${event.currentTarget.id}`);
+                    }catch(error){
+                        console.log(error);
+                    }
             }
         }
         )
         setGoals(newGoals);
     }
     const handleAdd=()=>{
-        const newGoals = [...Goals];
         if (document.getElementsByClassName('input-Your-Goal')[0].value === '') {
             alert('Please enter your goal');
             return;
@@ -44,19 +71,28 @@ const GoalsPage = () => {
             return;
             }
         const newGoal = {
-            id: newGoals.length+1,
+            CustomerId: user.CustomerId,
             title: document.getElementsByClassName('input-Your-Goal')[0].value,
             comment: document.getElementsByClassName('input-Goal-comment')[0].value,
             dueDate: document.getElementsByClassName('input-Goal-date')[0].value,
             Finished: false
         }
-        newGoals.push(newGoal);
-        setGoals(newGoals);
-        document.getElementsByClassName('input-Your-Goal')[0].value = '';
-        document.getElementsByClassName('input-Goal-comment')[0].value = '';
-        document.getElementsByClassName('input-Goal-date')[0].value = '';
+        const createGoal = async (newGoal) => {
+            try{
+                const response = await axios.post('http://127.0.0.1:8000/api/create_goal/', newGoal);
+                setGoals((prevGoals) => [...prevGoals, newGoal]);
+                document.getElementsByClassName('input-Your-Goal')[0].value = '';
+                document.getElementsByClassName('input-Goal-comment')[0].value = '';
+                document.getElementsByClassName('input-Goal-date')[0].value = '';
+                // window.location.reload();
+                }catch(error){
+                    console.log(error);
+                }
+        }
+        createGoal(newGoal);
         
     }
+
     const compareDates = (dateStr1, dateStr2) => {
         const date1 = new Date(dateStr1);
         const date2 = new Date(dateStr2);
@@ -106,17 +142,17 @@ const GoalsPage = () => {
                     <h4>You don't have any goal added at this moment, add them up!</h4>
                   ) :
                 Goals.map((goal)=>{
-                    const{id, title, comment, dueDate, Finished} = goal;
-                    if(goal.Finished===false){
+                    const{ GoalId, title, comment, dueDate, Finished} = goal;
+                    if(Finished===false){
                     return(
                         <div className='Goal-grid'>
-                        <p>{goal.title}</p>
-                        <p>{goal.comment}</p>
+                        <p>{title}</p>
+                        <p>{comment}</p>
                         <p
-                        style={{color: compareDates(goal.dueDate, new Date().toISOString().split('T')[0]) ? 'red' : 'black',}}
+                        style={{color: compareDates(dueDate, new Date().toISOString().split('T')[0]) ? 'red' : 'black',}}
                         >{goal.dueDate}</p>
-                        <p>{goal.Finished?'Finished':'On the way'}</p>
-                        <button className='Finish-goal-button' id={goal.id} onClick={handleFinish}>Finish</button>
+                        <p>{Finished?'Finished':'On the way'}</p>
+                        <button className='Finish-goal-button' id={GoalId} onClick={handleFinish}>Finish</button>
                         </div>
                     )
                     }
@@ -146,7 +182,7 @@ const GoalsPage = () => {
                         <p>{goal.comment}</p>
                         <p>{new Date().toISOString().split('T')[0] }</p>
                         <p>{goal.Finished?'Finished':'On the way'}</p>
-                        <button className='delete-goal-button' id={goal.id} onClick={handleDelete}>Delete</button>
+                        <button className='delete-goal-button' id={goal.GoalId} onClick={handleDelete}>Delete</button>
                         </div>
                     )
                     }

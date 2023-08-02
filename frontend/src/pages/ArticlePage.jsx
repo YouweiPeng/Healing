@@ -4,32 +4,77 @@ import SideBar from '../components/sideBar';
 import { useGlobalContext } from '../context';
 import PageHomeButton from '../components/PageHomeButton';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { GrView } from 'react-icons/gr';
+import axios from 'axios';
+import { useEffect } from 'react';
+import Modal from 'react-modal'; 
+import {IoMdCloseCircle} from 'react-icons/io';
 
 const ArticlePage = () => {
-  
+  const { user } = useGlobalContext();
   const { isSidebarExpanded } = useGlobalContext();
-  const { articleTopics , setArticleTopics} = useGlobalContext();
-  // State to track expanded tabs
-  const [expandedTabs, setExpandedTabs] = useState({});
+  const { articleTopics, setArticleTopics } = useGlobalContext();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [currentArticle, setCurrentArticle] = useState(null);
 
-  // Toggle the expansion of a tab
-  const toggleTabExpansion = (tabId) => {
-    setExpandedTabs((prevTabs) => ({
-      ...prevTabs,
-      [tabId]: !prevTabs[tabId],
-    }));
+  const fetchArticles = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/get_articles/');
+      console.log(response.data);
+      const data = response.data;
+      setArticleTopics(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleLikeButton = (event) => {
-    const NewArticle=[...articleTopics]
-    NewArticle.map((item)=>{
-      if(item.id === parseInt(event.currentTarget.id)){
-        item.like=!item.like
-      }
-    })
-    setArticleTopics(NewArticle);
-  }
 
-  // Sample article topics (You can replace this with your actual article topics)
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+
+  const articleContentStyle = {
+    padding: '10px',
+    textAlign: 'left',
+    whiteSpace: 'pre-wrap',
+    backgroundColor: '#f0f0f0',
+  };
+
+  const openModal = (article) => {
+    setCurrentArticle(article);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setCurrentArticle(null);
+    setModalIsOpen(false);
+  };
+
+  const modalStyles = {
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 9999,
+    },
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      padding: '20px',
+      maxWidth: '80%',
+      maxHeight: '80%',
+      overflow: 'auto',
+    },
+  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <motion.div
@@ -47,11 +92,9 @@ const ArticlePage = () => {
         <h1>Article Page</h1>
         <SideBar />
 
-        {/* Render the expandable tabs */}
         {articleTopics.map((topic) => (
           <div key={topic.id} style={{ marginTop: '20px', borderBottom: '1px solid #ccc' }}>
             <div
-              
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -60,60 +103,52 @@ const ArticlePage = () => {
                 background: '#f0f0f0',
               }}
             >
-              <h3>{topic.title}
+              <h3>{topic.title}</h3>
               <button
-                id={topic.id}
                 style={{
                   border: 'none',
                   backgroundColor: 'transparent',
                   cursor: 'pointer',
-                  marginTop: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
+                  marginLeft: '5px',
+                  fontSize: '20px',
                 }}
-                onClick={handleLikeButton}
-                >Like {topic.like?<AiFillHeart style={{fontSize:'20px',color:'red'}}/>:<AiOutlineHeart style={{fontSize:'20px',color:'red'}}/>}
-               </button>
-              </h3>
-              {expandedTabs[topic.id] ? (
-                // If expanded, show "-" icon
-                <button
-                  style={{
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    marginLeft: '5px',
-                    fontSize: '20px',
-                  }}
-                  onClick={() => toggleTabExpansion(topic.id)}
-                >
-                  -
-                </button>
-              ) : (
-                // If not expanded, show "+" icon
-                <button
-                id={topic.id}
-                  style={{
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    marginLeft: '5px',
-                    fontSize: '20px',
-                  }}
-                  onClick={() => toggleTabExpansion(topic.id)}
-                >
-                  +
-                </button>
-              )}
+              >
+                <GrView onClick={() => openModal(topic)} />
+              </button>
             </div>
-            {expandedTabs[topic.id] && (
-              <div style={{ padding: '10px', textAlign: 'left' }}>
-                {topic.content}
-              </div>
-            )}
           </div>
         ))}
+
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={modalStyles}
+          ariaHideApp={false}
+        >
+          {currentArticle && (
+            <div>
+              <h3 style={{textAlign:"center", fontWeight:'bold',marginBottom:"10px"}}>{currentArticle.title}</h3>
+              <h5 style={{textAlign:"center",marginBottom:"12px"}}>By {currentArticle.author}</h5>
+              <h6 style={{ textAlign: 'center', marginBottom: '12px' }}>Published in {formatDate(currentArticle.publishDate)}</h6>
+              <IoMdCloseCircle
+                style={{
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  cursor: 'pointer',
+                  fontSize: '25px',
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  color: 'red',
+                }}
+                onClick={closeModal}
+              >
+                X
+              </IoMdCloseCircle>
+              <div style={articleContentStyle}>{currentArticle.content}</div>
+            </div>
+          )}
+        </Modal>
       </div>
     </motion.div>
   );

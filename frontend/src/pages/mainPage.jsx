@@ -1,7 +1,6 @@
 import React from "react";
 import SideBar from "../components/sideBar";
 import { useGlobalContext } from "../context";
-// import background from"../images/background.jpg"
 import {GiNightSleep} from 'react-icons/gi';
 import {BsEmojiSunglassesFill} from 'react-icons/bs';
 import {AiOutlineAim} from 'react-icons/ai';
@@ -11,7 +10,12 @@ import { useState } from "react";
 import{BsAlipay} from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import {motion} from 'framer-motion';
+import Button from '@mui/material-next/Button';
+import { useEffect } from "react";
 function MainPage() {
+    const {user,setUser} = useGlobalContext();
+    const {cart, setCart,fetchCart} = useGlobalContext();
+    const userName = user?.firstname || "Guest";
     const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
     const navigate = useNavigate();
     const{button1Clicked, setButton1Clicked,button2Clicked, setButton2Clicked,button3Clicked, setButton3Clicked,button4Clicked, setButton4Clicked,button5Clicked, setButton5Clicked} = useGlobalContext();
@@ -41,6 +45,17 @@ function MainPage() {
     const handleSupportButton = () => {
         navigate('/SupportPage');
     };
+    const handleLogOut = () => {
+        setUser("");
+        navigate('/');
+    };
+    useEffect(() => {
+        fetchCart();
+      }
+      ,[]);
+
+    console.log(cart)
+    
     return (
         <motion.div
       initial="page-entering"
@@ -74,6 +89,19 @@ function MainPage() {
                             onClick={handleContinueButton}
                         >{button1Clicked||button2Clicked||button3Clicked||button4Clicked||button5Clicked ? `Continue`:``}</button>
                     </div>
+                <div className="user-profile">
+                    <img className='user-profile-pic' src="../images/Default_Profile_Picture.png"/>
+                    <h3>Hello, {userName}</h3>
+                        <Button disabled={false} variant="filledTonal" >
+                            Check my reservations
+                            </Button>
+                        <Button onClick={handleLogOut} style={{display:"block", margin:"auto", marginTop:"10px"}} disabled={false} variant="filledTonal" >
+                            Log out
+                            </Button>
+
+
+
+                </div>
                 <button onClick={handleSupportButton} className="support-button"><span className="support-text">support us! 	→ </span><BsAlipay/> </button>
                 </div>
             </div>

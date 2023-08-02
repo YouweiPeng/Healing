@@ -12,7 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import{useGlobalContext} from '../context'
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -31,14 +33,37 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const {setUser} = useGlobalContext();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+    };
+    console.log(data);
+  
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/get_customers/', {
+        params: data,
+      });
+      console.log(response.data);
+      setUser(response.data);
+      if (response.data.role === "CUSTOMER"){
+
+      navigate('/MainPage');
+      }
+      else{
+        console.log("is a Admin")
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      alert("invalid email or wrong password");
+      // Handle login error here
+    }
   };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
