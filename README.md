@@ -1,3 +1,3 @@
 # This is the website for healing company
-## Frontend: React
-## Backend: Django
+## Frontend: React.js
+## Backend: Django(Python framework)
