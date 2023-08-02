@@ -1,17 +1,14 @@
 # This is the website project for a healing company
 
-## Frontend: React.js
-Frontend: React.js
-<br>
-<img src="docs/ReactIcon.png" alt="React" width="200">
-
-## Backend: Django (Python framework)
-Backend: Django (Python framework)
-<br>
-<img src="docs/DjangoIcon.jpg" alt="Django" width="100">
-
-## Database: MySQL
+## Technologies Used
+Frontend: React.js &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Backend: Django (Python framework) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Database: MySQL
 <br>
-<img src="docs/MySQL_Icon.png" alt="MySQL" width="100">
+<br>
+<img src="docs/ReactIcon.png" alt="React" width="200" height="auto">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="docs/DjangoIcon.png" alt="Django" width="200" height="auto" backgroundco>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="docs/MySQL_Icon.png" alt="MySQL" width="200" height="auto">
+
+
 
