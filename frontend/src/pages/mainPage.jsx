@@ -95,9 +95,13 @@ function MainPage() {
                         <Button disabled={false} variant="filledTonal" >
                             Check my reservations
                             </Button>
+                            <Button disabled={false} variant="filledTonal"  style={{display:"block", margin:"auto", marginTop:"10px"}}>
+                            Check my orders
+                            </Button>
                         <Button onClick={handleLogOut} style={{display:"block", margin:"auto", marginTop:"10px"}} disabled={false} variant="filledTonal" >
                             Log out
                             </Button>
+
 
 
 

@@ -149,3 +149,14 @@ def get_cart_items_by_cart(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except cart.DoesNotExist:
             return Response("No cart found for this customer.", status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def delete_cart_item(request):
+    cart_id = request.query_params.get('cartId')
+    product_id = request.query_params.get('product')
+    cart_item = CartItem.objects.get(cartId=cart_id, product=product_id)
+    if cart_item is None:
+        print("cart item is none")
+        return Response("cart item update failed.", status=status.HTTP_400_BAD_REQUEST)
+    cart_item.delete()
+    return Response('Cart item deleted successfully', status=status.HTTP_200_OK)

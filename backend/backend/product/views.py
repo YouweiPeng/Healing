@@ -11,4 +11,10 @@ def getProducts(request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
-
+@api_view(['GET'])
+def getSingleProduct(request,pk):
+    if request.method == 'GET':
+        product = Product.objects.get(id=pk)
+        print(product)
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)

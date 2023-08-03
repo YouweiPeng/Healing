@@ -13,7 +13,7 @@ const StorePage = () => {
   const {isSidebarExpanded, setIsSidebarExpanded} = useGlobalContext();
   const {user} = useGlobalContext();
   const{storeItems,setStoreItems} = useGlobalContext();
-  const {cart, setCart,fetchCart}= useGlobalContext();
+  const {cart, setCart,fetchCart,cartQuantity}= useGlobalContext();
   const {cartDataFetched }= useGlobalContext();
   const {cartContent, setCartContent} = useGlobalContext();
   useEffect(() => {
@@ -126,41 +126,6 @@ const StorePage = () => {
   fetchCartItems(data);
   }, []);
   
-  const cartQuantity = () => {
-    // let quantity = 0;
-    // console.log(cart)
-    // console.log(cart.inCart)
-    // if (cartDataFetched) {
-    //   cart.inCart.map((item) => {
-    //     const data = {
-    //       cart: cart.cartId,
-    //       product: item,
-    //     };
-    //     const fetchCartItems = async (data) => {
-    //       const response = await axios.get('http://127.0.0.1:8000/api/get_cart_items/', {params:data,});
-    //       console.log(response.data[0].quantity)
-    //       // response.then(response => {
-    //       //   const cartItems = response.data;
-    //       //   console.log(cartItems[0].quantity)
-    //       //   return cartItems[0].quantity;
-    //       // });
-    //       return response.data[0].quantity;
-    //     }
-    //     let add=fetchCartItems(data);
-    //     quantity += add;
-    //   });
-    // }
-    // console.log(quantity)
-    // return quantity;
-    // return (cart.inCart.length);
-    let quantity = 0;
-    cartContent.map((item) => {
-      quantity += item.quantity;
-    }
-    );
-    return quantity;
-  };
-
   console.log(cartContent)
     return (
       <motion.div

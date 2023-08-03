@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import create_customer,get_customers,get_goal,create_goal,update_goal,delete_goal,get_cart,create_cart,add_to_cart,get_cart_items,get_cart_items_by_cart,update_cart_items
+from .views import create_customer,get_customers,get_goal,create_goal,update_goal,delete_goal,get_cart,create_cart,add_to_cart,get_cart_items,get_cart_items_by_cart,update_cart_items,delete_cart_item
 
 urlpatterns = [
     path('create_customer/', create_customer, name="create_customer"),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('get_cart_items/', get_cart_items, name="get_cart_items"),
     path('get_cart_items_by_cart/', get_cart_items_by_cart, name="get_cart_items_by_cart"),
     path('update_cart_items/', update_cart_items, name="update_cart_items"),
+    path('delete_cart_item/', delete_cart_item, name="delete_cart_item"),
 ]
     
