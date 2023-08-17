@@ -6,6 +6,8 @@ const AppProvider = ({ children }) => {
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const [user, setUser] = useState();
     const [cartDataFetched, setCartDataFetched] = useState(false);
+    const [userAppointments, setUserAppointments] = useState([]);
+    const [userOrders, setUserOrders] = useState([]);
     const [recFriends, setRecFriends] = useState( JSON.parse(localStorage.getItem('recFriends'))||[
       {
           id : 1,
@@ -75,6 +77,16 @@ const AppProvider = ({ children }) => {
       localStorage.setItem('recFriends', JSON.stringify(recFriends));
       
     }, [recFriends]);
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/get_appointments/', {params:{CustomerId:user.CustomerId, email:user.email}});
+        console.log(response.data)
+        setUserAppointments(response.data);
+      }
+      catch (error) {
+        console.error('Error fetching appointments:', error);
+        }
+      }
     const fetchCart = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/get_cart/', {params:{CustomerId:user.CustomerId}});
@@ -94,6 +106,34 @@ const AppProvider = ({ children }) => {
         fetchCart();
       }
       ,[]);
+    const fetchOrders_by_user = async () => {
+      const orderData=[]
+      try {
+        
+        const response = await axios.get('http://127.0.0.1:8000/api/get_order_by_user/', {params:{CustomerId:user.CustomerId}});
+        console.log(response.data)
+        response.data.map((order) => {
+            const fetchOrderItems = async () => {
+              const response2 = await axios.get('http://127.0.0.1:8000/api/get_orderItem/', {params:{orderId:order.id}});
+              console.log(response2.data)
+              orderData.push({order:order,orderItems:response2.data})
+            }
+            fetchOrderItems();
+          })
+
+        // const orderData=response.data.map((order) => {
+        //   const orderItems=response2.data.filter((item) => item.id===response2.data.order)
+        //   return {order:order,orderItems:orderItems}
+        // }
+        // )
+        // console.log(orderData)
+      
+      }
+      catch (error) {
+        console.error('Error fetching orders:', error);
+        }
+      setUserOrders(orderData);
+      }
       const cartQuantity = () => {
         // let quantity = 0;
         // console.log(cart)
@@ -131,7 +171,7 @@ const AppProvider = ({ children }) => {
     return (
       <AppContext.Provider value={{ isSidebarExpanded, setIsSidebarExpanded ,recFriends,setRecFriends, storeItems,cart, setCart,articleTopics,setArticleTopics,Goals,setGoals,fetchCart,
         button1Clicked, setButton1Clicked,button2Clicked, setButton2Clicked,button3Clicked, setButton3Clicked,button4Clicked, setButton4Clicked,button5Clicked, setButton5Clicked,setStoreItems,
-        user, setUser,cartDataFetched, setCartDataFetched,cartContent, setCartContent,cartQuantity
+        user, setUser,cartDataFetched, setCartDataFetched,cartContent, setCartContent,cartQuantity,userAppointments,fetchAppointments,setUserAppointments,fetchOrders_by_user,userOrders,setUserOrders
       }}>
         {children}
       </AppContext.Provider>

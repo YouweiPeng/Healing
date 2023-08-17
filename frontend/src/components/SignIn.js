@@ -55,7 +55,7 @@ export default function SignIn() {
       navigate('/MainPage');
       }
       else{
-        console.log("is a Admin")
+        navigate('/adminDashboard');
       }
     } catch (error) {
       console.error('Error logging in:', error);

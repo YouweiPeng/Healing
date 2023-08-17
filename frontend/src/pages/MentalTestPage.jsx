@@ -3,37 +3,57 @@ import { motion } from 'framer-motion';
 import SideBar from '../components/sideBar';
 import { useGlobalContext } from '../context';
 import PageHomeButton from '../components/PageHomeButton';
-
+import axios from 'axios';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Button from '@mui/material/Button';
 const MentalTestPage = () => {
+  const {user} = useGlobalContext();
   const { isSidebarExpanded } = useGlobalContext();
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedProblem, setSelectedProblem] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   // Sample available time options (you can replace this with your actual available times)
   const availableTimes = [
-    { id: 1, time: 'Time slot 1' },
-    { id: 2, time: 'Time slot 2' },
-    { id: 3, time: 'Time slot 3' },
+    { id: 1, time: '10:00' },
+    { id: 2, time: '11:00' },
+    { id: 3, time: '13:00' },
+    { id: 4, time: '15:00' },
   ];
 
   // Handler for form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     // Perform any action you want with the form data (name, email, selectedProblem, selectedDate, selectedTime)
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Selected Problem:', selectedProblem);
-    console.log('Selected Date:', selectedDate);
-    console.log('Selected Time:', selectedTime);
     setName('');
     setEmail('');
     setSelectedProblem('');
     setSelectedDate('');
     setSelectedTime('');
+    const data = {
+      name: user.firstname+" "+user.lastname,
+      email: user.email,
+      CustomerId: user.CustomerId,
+      problem: selectedProblem,
+      date: selectedDate,
+      time: selectedTime,
+    };
+    console.log(data);
+    const createAppointment = async () => {
+      try{
+      const response = await axios.post('http://127.0.0.1:8000/api/create_appointment/', data);
+      console.log(response);
+      setIsAlertOpen(true);
+      }
+      catch(error){
+        console.log(error);
+      }
+    };
+    createAppointment();
   };
 
   return (
@@ -65,26 +85,8 @@ const MentalTestPage = () => {
         </div>
       <div className='info-div'>
         <form onSubmit={handleSubmit}>
-          <div style={{ margin: '20px 0' }}>
-            <label htmlFor="name">Name: </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div style={{ margin: '20px 0' }}>
-            <label htmlFor="email">Email: </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+
+
           <div style={{ margin: '20px 0' }}>
             <label htmlFor="problem">Select a problem: </label>
             <select
@@ -97,7 +99,8 @@ const MentalTestPage = () => {
               <option value="Problem 1">Problem 1</option>
               <option value="Problem 2">Problem 2</option>
               <option value="Problem 3">Problem 3</option>
-              {/* Add more options as needed */}
+              <option value="Problem 4">Problem 4</option>
+              <option value="Problem 5">Problem 5</option>
             </select>
           </div>
           <div style={{ margin: '20px 0' }}>
@@ -108,7 +111,7 @@ const MentalTestPage = () => {
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               required
-              min={new Date().toISOString().split('T')[0]} // Set the minimum date to today
+              min={new Date().toISOString().split('T')[0]} 
             />
           </div>
           <div style={{ margin: '20px 0' }}>
@@ -129,6 +132,23 @@ const MentalTestPage = () => {
           </div>
           <button className='submit-button' type="submit">Confirm and Book</button>
         </form>
+        {isAlertOpen && (
+              <div className="alert-overlay">
+                <div className="alert-center">
+                  <Alert
+                    action={
+                      <Button color="inherit" size="small" onClick={() => setIsAlertOpen(false)}>
+                        Close
+                      </Button>
+                    }
+                    severity="success"
+                  >
+                    <AlertTitle>Success</AlertTitle>
+                    Your appointment has been booked successfully!
+                  </Alert>
+                </div>
+              </div>
+            )}
         </div>
         </div>
         </div>

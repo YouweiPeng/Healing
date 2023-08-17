@@ -287,7 +287,7 @@ ul {
 .user-profile{
   background-color: white;
   padding: 20px 40px;
-  height: 39vh;
+  height: 42vh;
   margin-top: 10%;
   margin-right: 100px;
   border-radius: 5px;
@@ -341,7 +341,7 @@ ul {
   display: flex;
   justify-content: left;
   align-items: center;
-  padding: 25px 20px;
+  padding: 20px 20px;
   border-radius: 30px;
   border: none;
   font-family: Arial;
@@ -899,4 +899,83 @@ flex: 0.5;
 .place-order-button:hover{
   background-color: rgb(248, 207, 4);
   border: 1px solid rgb(252, 210, 0);
+}
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure the overlay is on top of other content */
+}
+
+.alert-center {
+  max-width: 80%; /* Adjust the maximum width of the alert as needed */
+}
+
+.chat-input-box{
+  margin-top: 40px;
+  padding: 10px;
+  margin-right: 20px;
+}
+.send-button{
+  background-color: rgb(0, 122, 128);
+    color: white;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 10px;
+}
+.chat-message{
+  margin-top: 20px;
+}
+.admin-logout{
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 3rem;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+.admin-logout:hover{
+  background-color: rgb(210, 208, 208);
+}
+.admin-dash-grid{
+  height: 80vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 40px;
+  margin-right: 40px;
+  margin-top: 50px;
+}
+.admin-options{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid rgb(190, 189, 189);
+  padding: 30px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease-in-out;
+}
+.admin-options:hover{
+  background-color: rgb(190, 189, 189);
+}
+.dark-theme {
+  padding-bottom: 160px;
+  background-color: #333;
+  color: #fff;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.light-theme {
+  padding-bottom: 160px;
+  background-color: #f0f0f0;
+  color: #000;
+  transition: background-color 0.3s ease-in-out;
 }

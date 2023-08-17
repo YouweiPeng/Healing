@@ -87,7 +87,7 @@ const ArticlePage = () => {
       }}
       transition={{ duration: 1 }}
     >
-      <div className="container" style={{ marginLeft: isSidebarExpanded ? '200px' : '90px', position: 'relative' }}>
+      <div style={{ marginLeft: isSidebarExpanded ? '200px' : '90px', position: 'relative' }}>
         <PageHomeButton />
         <h1>Article Page</h1>
         <SideBar />

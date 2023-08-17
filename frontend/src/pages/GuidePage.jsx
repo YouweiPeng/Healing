@@ -36,7 +36,7 @@ const GuidePage = () => {
       }}
       transition={{ duration: 1 }}
     >
-      <div className="container" style={{ marginLeft: isSidebarExpanded ? '200px' : '90px' }}>
+      <div style={{ marginLeft: isSidebarExpanded ? '200px' : '90px' }}>
         <h2 style={{marginTop:'30px'}}>You selected {selects()}</h2>
         <h2>But we are still working on the guide steps for specific needs for user</h2>
         <img className='still-working' src="../images/comming.jpg" />

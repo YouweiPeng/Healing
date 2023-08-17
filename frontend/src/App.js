@@ -17,6 +17,7 @@ import CheckOutPage from "./pages/CheckOutPage";
 import GoalsPage from "./pages/GoalsPage";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import AdminDashboard from "./pages/adminDashboard";
 function App() {
   return (
     <div className="App">
@@ -44,6 +45,7 @@ function App() {
             <Route path="/ArticlePage" element={<ArticlePage />}></Route>
             <Route path="/CheckOutPage" element={<CheckOutPage />}></Route>
             <Route path="/GoalsPage" element={<GoalsPage />}></Route>
+            <Route path="/adminDashboard" element={<AdminDashboard />}></Route>
           </Routes>
           </motion.div>
       </Router>

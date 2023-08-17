@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from users.models import Customer,User,Goal,cart,CartItem
-from .serializers import CustomerSerializer,UserSerializer,GoalSerializer,cartSerializer,CartItemSerializer
+from users.models import Customer,User,Goal,cart,CartItem,order,orderItems
+from .serializers import CustomerSerializer,UserSerializer,GoalSerializer,cartSerializer,CartItemSerializer,orderSerializer,orderItemsSerializer
 from rest_framework.views import APIView
 
 @api_view(['POST'])
@@ -29,7 +29,17 @@ def get_customers(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Customer.DoesNotExist:
             return Response("Login failed. Incorrect email or password.", status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+def get_customer_by_id(request):
+    if request.method == 'GET':
+        customer_id = request.query_params.get('CustomerId')
 
+        try:
+            user = Customer.objects.get(CustomerId=customer_id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Customer.DoesNotExist:
+            return Response("Login failed. Incorrect email or password.", status=status.HTTP_404_NOT_FOUND)
     
 @api_view(['DELETE'])
 def delete_customer(request, pk):
@@ -160,3 +170,61 @@ def delete_cart_item(request):
         return Response("cart item update failed.", status=status.HTTP_400_BAD_REQUEST)
     cart_item.delete()
     return Response('Cart item deleted successfully', status=status.HTTP_200_OK)
+@api_view(['DELETE'])
+def clear_cart(request):
+    cart_id = request.query_params.get('cartId')
+    cart_items = CartItem.objects.filter(cartId=cart_id)
+    if cart_items is None:
+        print("cart item is none")
+        return Response("cart item update failed.", status=status.HTTP_400_BAD_REQUEST)
+    cart_items.delete()
+    return Response('Cart is clear', status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_order_all(request):
+    if request.method == 'GET':
+        try:
+            orders = order.objects.all()
+            serializer = orderSerializer(orders, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except order.DoesNotExist:
+            return Response("No orders found.", status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+def get_order_by_user(request):
+    if request.method == 'GET':
+        customer_id = request.query_params.get('CustomerId')
+        try:
+            orders = order.objects.filter(CustomerId=customer_id)
+            serializer = orderSerializer(orders, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except order.DoesNotExist:
+            return Response("No orders found.", status=status.HTTP_404_NOT_FOUND)
+@api_view(['POST'])
+def post_order(request):
+    if request.method == 'POST':
+        serializer = orderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response("order creation failed.", status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def get_orderItem(request):
+    if request.method == 'GET':
+        order_id = request.query_params.get('orderId')
+        print(order_id)
+        try:
+            order_Items = orderItems.objects.filter(order=order_id)
+            serializer = orderItemsSerializer(order_Items, many=True)
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except orderItems.DoesNotExist:
+            return Response("No orderItems found.", status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def post_orderItem(request):
+    if request.method == 'POST':
+        serializer = orderItemsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response("orderItems creation failed.", status=status.HTTP_400_BAD_REQUEST)

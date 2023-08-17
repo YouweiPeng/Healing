@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from datetime import datetime
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True, null=False)
     email = models.EmailField(unique=True, null=True, blank=True)
@@ -56,4 +56,16 @@ class CartItem(models.Model):
     product = models.ForeignKey('product.Product', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
+class order(models.Model):
+    CustomerId = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    totalPrice=models.FloatField(null=False)
+    orderDate=models.DateTimeField(null=False,default=datetime.now)
+    def __str__(self):
+        return self.CustomerId.firstname + " " + self.CustomerId.lastname + "'s order"
 
+class orderItems(models.Model):
+    order = models.ForeignKey(order, on_delete=models.CASCADE)
+    product = models.CharField(max_length=200)
+    quantity = models.PositiveIntegerField(default=1)
+    def __str__(self):
+        return  self.product + " of " + str(self.quantity) + " " + "items"
